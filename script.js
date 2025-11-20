@@ -5,10 +5,8 @@ let width, height;
 let stars = [];
 let planets = [];
 let zodiacs = [];
-const STAR_COUNT = 400;
+const STAR_COUNT = 200; // Reduced for performance
 const ZODIAC_SYMBOLS = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🕉️', '✨'];
-
-let isWarping = true; // Start with warp speed
 
 // Resize canvas
 function resize() {
@@ -47,78 +45,30 @@ class Star {
         // Normal movement
         this.vx = (Math.random() - 0.5) * 0.2;
         this.vy = (Math.random() - 0.5) * 0.2;
-
-        // Warp center (screen center)
-        this.cx = width / 2;
-        this.cy = height / 2;
     }
 
     update() {
-        if (isWarping) {
-            // WARP MODE: Move away from center
-            const dx = this.x - width / 2;
-            const dy = this.y - height / 2;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            // Speed increases with distance from center
-            const speed = 0.05 * dist + 2;
-
-            const angle = Math.atan2(dy, dx);
-            this.x += Math.cos(angle) * speed;
-            this.y += Math.sin(angle) * speed;
-
-            // Streak effect (longer alpha trail)
-            this.alpha = 0.8;
-
-            // Reset if out of bounds
-            if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                // Start closer to center for continuous flow
-                if (Math.random() < 0.5) {
-                    this.x = (Math.random() * 100) + (width / 2 - 50);
-                    this.y = (Math.random() * 100) + (height / 2 - 50);
-                }
-            }
-        } else {
-            // FLOAT MODE: Normal behavior
-            this.alpha += this.twinkleSpeed * this.twinkleDir;
-            if (this.alpha > 0.8 || this.alpha < 0.1) {
-                this.twinkleDir *= -1;
-            }
-
-            this.x += this.vx;
-            this.y += this.vy;
-
-            // Wrap around
-            if (this.x < 0) this.x = width;
-            if (this.x > width) this.x = 0;
-            if (this.y < 0) this.y = height;
-            if (this.y > height) this.y = 0;
+        // FLOAT MODE: Normal behavior
+        this.alpha += this.twinkleSpeed * this.twinkleDir;
+        if (this.alpha > 0.8 || this.alpha < 0.1) {
+            this.twinkleDir *= -1;
         }
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Wrap around
+        if (this.x < 0) this.x = width;
+        if (this.x > width) this.x = 0;
+        if (this.y < 0) this.y = height;
+        if (this.y > height) this.y = 0;
     }
 
     draw() {
         ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
         ctx.beginPath();
-
-        if (isWarping) {
-            // Draw streaks
-            const dx = this.x - width / 2;
-            const dy = this.y - height / 2;
-            const angle = Math.atan2(dy, dx);
-            const len = Math.min(30, Math.sqrt(dx * dx + dy * dy) * 0.1);
-
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x - Math.cos(angle) * len, this.y - Math.sin(angle) * len);
-            ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha})`;
-            ctx.lineWidth = this.z;
-            ctx.stroke();
-        } else {
-            // Draw dots
-            ctx.arc(this.x, this.y, this.z * 0.8, 0, Math.PI * 2);
-            ctx.fill();
-        }
+        ctx.arc(this.x, this.y, this.z * 0.8, 0, Math.PI * 2);
+        ctx.fill();
     }
 }
 
@@ -274,27 +224,6 @@ function init() {
 const shootingStar = new ShootingStar();
 resize(); // Calls init
 
-// Draw Constellations (connect nearby stars)
-function drawConstellations() {
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-    ctx.lineWidth = 0.5;
-
-    for (let i = 0; i < stars.length; i++) {
-        for (let j = i + 1; j < stars.length; j++) {
-            const dx = stars[i].x - stars[j].x;
-            const dy = stars[i].y - stars[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < 80) { // Connect if close
-                ctx.beginPath();
-                ctx.moveTo(stars[i].x, stars[i].y);
-                ctx.lineTo(stars[j].x, stars[j].y);
-                ctx.stroke();
-            }
-        }
-    }
-}
-
 // Animation Loop
 function animate() {
     ctx.clearRect(0, 0, width, height);
@@ -310,9 +239,6 @@ function animate() {
         zodiac.update();
         zodiac.draw();
     });
-
-    // Draw Constellations
-    drawConstellations();
 
     // Draw Stars
     stars.forEach(star => {
@@ -335,22 +261,15 @@ window.addEventListener('load', () => {
     const introScreen = document.getElementById('intro-screen');
     const mainContent = document.getElementById('main-content');
 
-    // 1. Intro Phase (Warp Speed)
+    // Show mantra for 3 seconds then fade out
     setTimeout(() => {
-        // 2. Transition Phase
         introScreen.style.opacity = '0';
-
-        // Slow down stars
-        isWarping = false;
-
-        // Re-initialize stars to random positions for smooth float
-        stars.forEach(star => star.reset());
 
         setTimeout(() => {
             introScreen.style.display = 'none';
             mainContent.style.opacity = '1';
             mainContent.style.pointerEvents = 'auto';
             mainContent.style.transition = 'opacity 2s ease-in-out';
-        }, 1500);
-    }, 4000); // 4 seconds of warp speed
+        }, 1500); // Wait for fade out
+    }, 3000); // Display time for mantra
 });
