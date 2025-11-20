@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KundaliAI - Your Personal AI Astrologer</title>
+    <meta name="description"
+        content="Vedic wisdom, powered by modern AI. Get instant, personalized Vedic astrology insights via voice conversation.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="cosmos-canvas"></canvas>
+
+    <div class="overlay"></div>
+
+    <!-- Intro Screen -->
+    <div id="intro-screen">
+        <div class="intro-content">
+            <div class="intro-mantra">|| ॐ तमसो मा ज्योतिर्गमय ||</div>
+            <div class="intro-translation">Lead me from darkness to light.</div>
+        </div>
+    </div>
+
+    <!-- Main Content (Hidden Initially) -->
+    <main class="container" id="main-content" style="opacity: 0; pointer-events: none;">
+        <header>
+            <div class="logo">
+                <span class="logo-icon">✨</span> KundaliAI
+            </div>
+            <div class="launch-badge">🚀 Launching Soon</div>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content glass-panel">
+                <h1 class="hero-title">
+                    <span class="reveal-text">Vedic Wisdom.</span><br>
+                    <span class="reveal-text delay-1">Powered by <span class="gradient-text">Modern AI</span>.</span>
+                </h1>
+
+                <div class="pitch-container">
+                    <p class="hero-pitch">
+                        <strong>Unlock Your Destiny. 24/7.</strong>
+                    </p>
+                    <p class="hero-pitch-sub">
+                        Stop wondering. Start knowing. Your personal Vedic Astrologer, trained on the wisdom of ancient
+                        <strong>Rishis</strong>, is just a voice command away.
+                    </p>
+                    <p class="hero-pitch-detail">
+                        Ask <em>"When will I find love?"</em> or <em>"Is this job right for me?"</em> in your own
+                        language.
+                        <br>The stars have the answers. We just translate them.
+                    </p>
+                    <p class="android-badge">📱 Coming exclusively to Android</p>
+                </div>
+
+                <div class="cta-group">
+                    <form class="waitlist-form" onsubmit="event.preventDefault();">
+                        <input type="email" placeholder="Claim your spot on the waitlist" required class="email-input">
+                        <button type="submit" class="cta-button">Get Early Access</button>
+                    </form>
+                    <p class="availability-text">Limited spots available for beta.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 KundaliAI. All stars aligned.</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
