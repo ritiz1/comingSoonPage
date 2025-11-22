@@ -5,7 +5,7 @@ let width, height;
 let stars = [];
 let planets = [];
 let zodiacs = [];
-const STAR_COUNT = 200; // Reduced for performance
+let STAR_COUNT = 200; // Default
 const ZODIAC_SYMBOLS = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🕉️', '✨'];
 
 // Resize canvas
@@ -20,6 +20,13 @@ function resize() {
     height = newHeight;
     canvas.width = width;
     canvas.height = height;
+
+    // Adjust for mobile
+    if (width < 768) {
+        STAR_COUNT = 80; // Fewer stars on mobile
+    } else {
+        STAR_COUNT = 200;
+    }
 
     if (needsInit || stars.length === 0) {
         init();
@@ -79,7 +86,11 @@ class Planet {
     }
 
     reset() {
-        this.radius = Math.random() * 40 + 10; // Size 10-50
+        const isMobile = width < 768;
+        const minSize = isMobile ? 5 : 10;
+        const maxSize = isMobile ? 20 : 40;
+
+        this.radius = Math.random() * maxSize + minSize;
         this.x = Math.random() * width;
         this.y = Math.random() * height;
         this.color = this.getRandomColor();
@@ -133,10 +144,12 @@ class Zodiac {
     }
 
     reset() {
+        const isMobile = width < 768;
+
         this.symbol = ZODIAC_SYMBOLS[Math.floor(Math.random() * ZODIAC_SYMBOLS.length)];
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.size = Math.random() * 30 + 20;
+        this.size = Math.random() * (isMobile ? 20 : 30) + (isMobile ? 10 : 20);
         this.speedY = -1 * (Math.random() * 0.3 + 0.1); // Float up
         this.opacity = 0;
         this.fadeIn = true;
